@@ -181,9 +181,11 @@ namespace Furiosity
                 
         /// Load a 3D model 
         ModelMesh3D* LoadModel3D(const string&  file);
-        
+
+#if USE_ASSIMP
         /// Load a whole 3D scene
         ModelScene3DResource* LoadModelScene3D(const string&  file);
+#endif
         
         ////////////////////////////////////////////////////////////////////////////////
         //                          Additional Methods

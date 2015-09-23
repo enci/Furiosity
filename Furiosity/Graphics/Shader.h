@@ -88,6 +88,9 @@ namespace Furiosity
 
         /// Gets the type of this parameter
         GLenum GetType() const { return type; }
+        
+        /// Location of this parameter
+        GLint GetLocation() const { return location; }
 
         /// Set the value. Parameter should be float.
         void SetValue(float val);

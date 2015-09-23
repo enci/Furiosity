@@ -536,6 +536,7 @@ ModelMesh3D* ResourceManager::LoadModel3D(const string& file)
     return static_cast<ModelMesh3D*>(r);
 }
 
+#if USE_ASSIMP
 ////////////////////////////////////////////////////////////////////////////////
 // Load 3D model
 ////////////////////////////////////////////////////////////////////////////////
@@ -549,6 +550,7 @@ ModelScene3DResource* ResourceManager::LoadModelScene3D(const string& file)
     
     return static_cast<ModelScene3DResource*>(r);
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Retain a resource by incrementing the internal reference counter.

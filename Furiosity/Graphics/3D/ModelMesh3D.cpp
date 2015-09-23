@@ -150,7 +150,7 @@ void ModelMesh3D::Reload(bool cached)
                 map<ulong, uint>::iterator itr;
                 itr = indexForVertex.find(hash);
                 // indexForVertex.end();//
-                if (false && itr != indexForVertex.end())
+                if (/* DISABLES CODE */ (false) && itr != indexForVertex.end())
                 {
                     // Vertex in set
                     indicesVec.push_back(itr->second);
@@ -305,4 +305,18 @@ void ModelMesh3D::Render(ShaderAttribute &attribPosition,
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         GL_GET_ERROR();
     }
+}
+
+int ModelMesh3D::GetVertexBuffer() const
+{
+    if(!HasVertexBuffers())
+        return 0;
+    return vbo[0];
+}
+
+int ModelMesh3D::GetIndexBuffer() const
+{
+    if(!HasVertexBuffers())
+        return 0;
+    return vbo[1];
 }

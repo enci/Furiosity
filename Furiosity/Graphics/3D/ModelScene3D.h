@@ -8,6 +8,8 @@
 
 #pragma once
 
+#if USE_ASSIMP
+
 #include "Resource.h"
 #include "Frmath.h"
 #include "VertexFormats.h"
@@ -167,8 +169,12 @@ namespace Furiosity
     {
         World3D& world;
         
+        SceneProcessor(const SceneProcessor& other) = delete;
+        
+        SceneProcessor(SceneProcessor& other) = delete;
+        
     public:
-        SceneProcessor(World3D& world) : world(world) {}
+        SceneProcessor(World3D& world);
         
         virtual void Process(Entity3D* parent, ModelScene3D & scene);
         
@@ -176,7 +182,9 @@ namespace Furiosity
         
         virtual Entity3D* AddLight(Entity3D* parent, ModelScene3D & scene, const aiNode* node);
         
-        virtual Entity3D* AddModelMesh(Entity3D* parent, ModelScene3D & scene, const aiNode* node);
+        virtual Entity3D* AddModelMesh(Entity3D* parent, ModelScene3D & scene, const aiNode* node);                
     };
 }
+
+#endif
 

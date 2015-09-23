@@ -5,6 +5,8 @@
 //  Copyright (c) 2015 Bojan Endrovski. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
+#if USE_ASSIMP
+
 #include "StaticMeshEntity3D.h"
 #include "Camera3D.h"
 #include "World3D.h"
@@ -31,6 +33,7 @@ StaticMeshEntity3D::StaticMeshEntity3D(World3D* world,
     attribNormal(           *effect->GetAttribute("a_normal")),
     attribTexture(          *effect->GetAttribute("a_texture"))
 {
+    name = string(node->mName.C_Str());
     color       = Color::White;
     ambient     = Color::Black;
     meshIndex = node->mMeshes[0];
@@ -55,6 +58,10 @@ StaticMeshEntity3D::StaticMeshEntity3D(World3D* world,
     aiColor3D aiDiffuse(0.f,0.f,0.f);
     material->Get(AI_MATKEY_COLOR_DIFFUSE, aiDiffuse);
     diffuse = AssimpTools::ConvertColor(aiDiffuse);
+    
+    aiColor3D aiEmissive(0.f,0.f,0.f);
+    material->Get(AI_MATKEY_COLOR_EMISSIVE, aiEmissive);
+    ambient = AssimpTools::ConvertColor(aiEmissive);
 }
 
 void StaticMeshEntity3D::Render(RenderManager3D& renderManager)
@@ -92,3 +99,4 @@ void StaticMeshEntity3D::Render(RenderManager3D& renderManager)
     mesh->Render(attribPosition, attribNormal, attribTexture);
 }
 
+#endif

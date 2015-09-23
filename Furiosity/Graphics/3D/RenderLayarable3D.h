@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Defines.h"
+
 namespace Furiosity
 {
     class RenderLayarable3D
@@ -20,8 +22,6 @@ namespace Furiosity
         
         void SetLayerFlags(uint layerFlags) { this->layerFlags = layerFlags; }
         
-        bool TestLayer(uint testLayer)      { return (layerFlags & testLayer) != 0; }
-        
-        
+        bool TestLayer(uint testLayer)      { return (layerFlags & testLayer) != 0; }                
     };
 }

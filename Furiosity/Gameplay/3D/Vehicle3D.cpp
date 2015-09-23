@@ -33,7 +33,8 @@ void Vehicle3D::LoadFromXml(const XMLElement &settings)
 
 void Vehicle3D::Update(float dt)
 {
-    force = headingSmoother.Update(Calculate());
+    steeringForce = Calculate();
+    force += headingSmoother.Update(steeringForce);
     DynamicEntity3D::Update(dt);
     
 #ifdef DEBUG    

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#if USE_ASSIMP
+
 #include "Entity3D.h"
 #include "Renderer3D.h"
 #include "ModelScene3D.h"
@@ -40,7 +42,8 @@ namespace Furiosity
         ModelScene3D&       scene;
         
         int meshIndex;
-        
+     
+    public:
         Color color;
         Color ambient;
         Color diffuse;
@@ -55,4 +58,4 @@ namespace Furiosity
     };
 }
 
-
+#endif

@@ -48,7 +48,7 @@ namespace Furiosity
         /// The default constructor creates a zero vector.
         Vector3() : x(0), y(0), z(0) {}
         
-        /// The explicit constructor creates a vector with the given components
+        /// Creates a vector with the given components
         Vector3(float x, float y, float z)
         : x(x), y(y), z(z) {}
         
@@ -209,6 +209,11 @@ namespace Furiosity
         void Normalize()
         {
             float l = Magnitude();
+			float inv = 1 / l;
+			x /= inv;
+			y /= inv;
+			z /= inv;
+
             if (l > 0)
             {
                 (*this) *= ((float)1)/l;

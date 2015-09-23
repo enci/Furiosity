@@ -56,7 +56,7 @@ namespace Furiosity
         {}
         
         // Get the entity
-        const Entity& Entity() const { return bge; }
+        const Entity& GetEntity() const { return bge; }
     };
 
 }

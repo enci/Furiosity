@@ -38,26 +38,18 @@ namespace Furiosity
     ///
     class Renderable3D : public RenderLayarable3D
     {
-        // Renderer3D& renderer;
-        
-        //float       layer       = 0.0f;
-        
         RenderQueue renderQueue = RenderQueue::Opaque;
         
+        // bool visible            = true;
+        
     public:
-        Renderable3D(/*Renderer3D&    renderer,
-                     float          layer = 0.0f */);
+        Renderable3D();
         
         virtual ~Renderable3D();
         
-        // TODO: The parameter is not need	ed here
-        // virtual void Render(Renderer3D& renderer) = 0;
+        virtual void Render(RenderManager3D& renderManager) = 0;
         
-        virtual void Render(RenderManager3D& renderManager) = 0; // {}
-        
-        // float RenderLayer() const { return layer; }
-
-        // void SetRenderLayer(float l) { layer = l; }
+        // void SetVisible()
     };
     
     /*

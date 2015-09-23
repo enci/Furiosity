@@ -38,12 +38,21 @@ namespace Furiosity
 
         World3D*                world3D     = nullptr;
         
+        bool                    enabled     = true;
+        
     public:
+        
         Entity3D(World3D* world, Entity3D* parent, float radius);
         
         ~Entity3D() {}
         
         virtual void Update(float dt) override;
+        
+        bool Enabled() const { return enabled; }
+        
+        void SetEnabled(bool enabled, bool recursive = true);
+        
+        Entity3D* FindChild(const string& name);
         
         virtual void LoadFromXml(const XMLElement& settings);
         

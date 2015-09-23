@@ -81,6 +81,10 @@ namespace Furiosity
         /// Determine if this mesh uses VBO's
         bool HasVertexBuffers() const { return vbo[0] != 0; };
         
+        int GetVertexBuffer() const;
+        
+        int GetIndexBuffer() const;
+        
         /// Draws the mesh using the shader settings already set. Basically it
         /// just sends the mesh data to the GPU, so it only works in context
         void Render(Effect& shader);

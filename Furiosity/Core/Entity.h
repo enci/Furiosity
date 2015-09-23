@@ -36,9 +36,6 @@ namespace Furiosity
 		/// the next valid ID
 		void        SetID(uint val);
         
-        /// A name for the entity, this helps when debugging
-        std::string name;
-        
     protected:
         
         /// This is a generic flag
@@ -48,6 +45,8 @@ namespace Furiosity
         /// In some game we are using this as a bitmap flag so carefull with this
 		int			type;
         
+        /// A name for the entity, this helps when debugging
+        std::string name;
         
         /// Abstract class
         Entity();

@@ -28,7 +28,7 @@ namespace Furiosity
         typedef std::list<Vector3> Path3D;
         
         /*
-        // Arrive makes use of these to determine how quickly a vehicle
+        // Arrive makes use of these to determine how qxuickly a vehicle
         // should decelerate to its target
         enum Deceleration
         {
@@ -79,6 +79,8 @@ namespace Furiosity
         
         World3D& world;
         
+        Vector3 steeringFoce;
+        
         /// This function tests if a specific bit of m_iFlags is set
         bool      On(behavior_type bt)  { return (flags & bt) == bt; }
         
@@ -118,6 +120,10 @@ namespace Furiosity
         virtual void LoadFromXml(const XMLElement& settings);
         
         virtual void Update(float dt) override;
+        
+        Vector3 SteeringForce() const { return steeringFoce; }
+        
+        Vector3 Heading() const { return headingSmoother.Value(); }
         
         // Set and get target
         void SetTarget(const Vector3& target) { this->target = target; }

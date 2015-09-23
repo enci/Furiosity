@@ -25,6 +25,8 @@
 
 #endif
 
+#define USE_ASSIMP 0
+
 namespace Furiosity
 {
     typedef unsigned int    uint;

@@ -108,19 +108,21 @@ void World3D::PrepareToRender()
     
     for(Entity3D* e : entities)
     {
+        bool enabled = e->Enabled();
+        
         // Collect all light
         Light3D* light = dynamic_cast<Light3D*>(e);
-        if(light)
+        if(enabled && light)
             renderInfo.lights.push_back(light);
         
         // Collect all cameras
         Camera3D* camera = dynamic_cast<Camera3D*>(e);
-        if(camera)
+        if(enabled && camera)
             renderInfo.cameras.push_back(camera);
         
         // Collect all renderable objects
         Renderable3D* renderable = dynamic_cast<Renderable3D*>(e);
-        if(renderable)
+        if(enabled && renderable)
             renderInfo.renderables.push_back(renderable);
     }
     

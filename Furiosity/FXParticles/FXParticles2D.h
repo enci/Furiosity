@@ -70,7 +70,7 @@ namespace Furiosity
         ~FXParticleManager2D();
                 
         /// Draws all particles.
-        void Render();                
+        void Render();        
     };
     
     typedef FXParticle<Vector2> FXParticle2D;

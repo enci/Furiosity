@@ -12,3 +12,6 @@ Furiosity.xcodeproj/xcuserdata/bojanendrovski.xcuserdatad/xcschemes/xcschememana
 Furiosity/freetype/libFreetype2-4-10-ios-fat.a
 
 Furiosity/Graphics/CubeMap (MAC_WIN's conflicted copy 2015-02-03).h
+Furiosity/Input/xkf3ce
+XsensSpecialSauce.h
+XsensSpecialSauce.cpp

@@ -27,9 +27,28 @@ void Entity3D::Update(float dt)
     UpdateTransform();
 }
 
+void Entity3D::SetEnabled(bool enabled, bool recursive)
+{
+    this->enabled = enabled;
+    
+    if(recursive)
+        for (auto c : childern)
+            c->SetEnabled(enabled, recursive);
+}
+
 void Entity3D::LoadFromXml(const XMLElement& settings)
 {
     settings.QueryFloatAttribute("boundingRadius", &radius);
+}
+
+// Find with linear search
+Entity3D* Entity3D::FindChild(const string& name)
+{
+    for (auto c : childern)
+        if(c->Name() == name)
+            return c;
+    
+    return nullptr;
 }
 
 void Entity3D::DebugRender()

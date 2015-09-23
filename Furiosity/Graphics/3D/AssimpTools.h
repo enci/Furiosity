@@ -6,6 +6,10 @@
 //  Copyright (c) 2015 Bojan Endrovski. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma once
+
+#if USE_ASSIMP
+
 // Fr
 #include "Frmath.h"
 #include "Color.h"
@@ -22,3 +26,5 @@ namespace Furiosity
         Matrix44 ConvertMatrix(const aiMatrix4x4& matrix);
     }
 }
+
+#endif

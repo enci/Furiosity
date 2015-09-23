@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Bojan Endrovski. All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
+#if USE_ASSIMP
+
 #include "ModelScene3D.h"
 #include "Entity3D.h"
 #include "StaticMeshEntity3D.h"
@@ -252,6 +254,9 @@ ModelScene3D::ModelScene3D(const string& file) :
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+SceneProcessor::SceneProcessor(World3D& world) : world(world) {}
+
+
 void SceneProcessor::Process(Entity3D* parent, ModelScene3D& scene)
 {
     aiNode* rootNode = scene->scene->mRootNode;
@@ -304,6 +309,7 @@ Entity3D* SceneProcessor::AddModelMesh(Entity3D* entity, ModelScene3D& scene, co
     return mesh;
 }
 
+#endif
 
 
 

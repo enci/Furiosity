@@ -12,8 +12,11 @@
 #include "Resource.h"
 
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
+#define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
+#include "stb_truetype.h"
+
+// #include <ft2build.h>
+// #include FT_FREETYPE_H
 
 
 namespace Furiosity
@@ -24,12 +27,15 @@ namespace Furiosity
         
         
     private:
-        std::string fontdata;
-        FT_Face face;
+        std::string fontdata; // Why is this kept?
+        
+        stbtt_fontinfo fontinfo;
+        
+        // FT_Face face;
         
         // Library instance is shared among all labels. It is instantiated
         // the first time any label is generated.
-        static FT_Library library;
+        // static FT_Library library;
         
     private:
         Font(const std::string& filename);
@@ -42,6 +48,12 @@ namespace Furiosity
             return fontdata;
         }
         
+        const stbtt_fontinfo& Fontinfo() const
+        {
+            return fontinfo;
+        }
+        
+        /*i
         FT_Face GetFace()
         {
             return face;
@@ -51,5 +63,6 @@ namespace Furiosity
         {
             return Font::library;
         }
+        */
     };
 }

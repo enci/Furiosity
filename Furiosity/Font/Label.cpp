@@ -8,8 +8,8 @@
 #include "Font.h"
 #include "utf8.h"
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
+// #include <ft2build.h>
+// #include FT_FREETYPE_H
 
 using namespace Furiosity;
 using namespace std;
@@ -42,12 +42,187 @@ Label::Label(const string& originalText,
     Reload();
 }
 
-Label::~Label() {
+Label::~Label()
+{
     // The superclass releases the glTexture.
 }
 
+unsigned char buffer[512][512];
+
 void Label::Reload(bool cached)
 {
+    float downscale = gResourceManager.GetFontDownscale() * 2.0f;
+    
+    // A language may have its own font, these fonts are stored as
+    // "translated" strings, too.
+    std::string fontfile = gResourceManager.GetString( font );
+    
+    if(fontfile.empty())
+        fontfile = font;
+    
+    Font* font = gResourceManager.LoadFont(fontfile);
+    
+    auto fontinfo = font->Fontinfo();
+    
+    // Aqcuire the translated string for this label:
+    std::string text = gResourceManager.GetString( originalText );
+    
+    // No translation available, revert to default (english) text.
+    if(text.empty())
+        text = originalText;
+    
+    
+    Vector2 outSize, outUV;
+    bool multiline = false;
+    
+    // Check for invalid utf-8 (for a simple yes/no check, there is also utf8::is_valid function)
+    auto end_it = utf8::find_invalid(text.begin(), text.end());
+    if (end_it != text.end())
+        LOG("Invalid UTF-8 encoding detected");
+    
+    vector<uint> utf32text;
+    utf8::utf8to32(text.begin(), text.end(), back_inserter(utf32text));
+
+    int ascent;
+    float scale = stbtt_ScaleForPixelHeight(&fontinfo, fontsize);   // get the scale for certain
+    stbtt_GetFontVMetrics(&fontinfo, &ascent, 0, 0);                // get the the ascent
+    int baseline = (int) (ascent*scale);                      // calculate the baseline in pixels
+    
+    
+    float xpos = 2;
+    float ymax = -FLT_MAX;
+    for(int ch = 0; ch < utf32text.size(); ++ch)
+    {
+        auto codepoint = utf32text[ch];
+        int advance, lsb, x0, y0, x1, y1;
+        float x_shift = xpos - (float)floor(xpos);
+        
+        stbtt_GetCodepointHMetrics(&fontinfo,                   // font
+                                   (int)codepoint,              // current
+                                   &advance,                    // advance
+                                   &lsb);                       // left side bearing
+        
+        stbtt_GetCodepointBitmapBoxSubpixel(&fontinfo,          // font
+                                            (int)codepoint,     // current character
+                                            scale,              // scale x (not in pixels)
+                                            scale,              // scale y (not in pixels)
+                                            x_shift,            // subpixel shift x
+                                            0,                  // subpixel shift y
+                                            &x0,                // x min (from)
+                                            &y0,                // y min (from)
+                                            &x1,                // x max (to)
+                                            &y1);               // y max (to)
+        
+        // This output can be saved into a bitmap and
+        stbtt_MakeCodepointBitmapSubpixel(&fontinfo,                                    // font
+                                          &buffer[baseline + y0][(int) xpos + x0],  // pos in final image
+                                          x1-x0,                                    // output_width
+                                          y1-y0,                                    // output_height
+                                          512,                                      // stride
+                                          scale,                                    // scale x
+                                          scale,                                    // scale y
+                                          x_shift,                                  // subpixel shift x
+                                          0,                                        // subpixel shift y
+                                          (int)codepoint);                                // codepoint
+        
+        xpos += (advance * scale);
+        if (ch < utf32text.size() - 1)
+            xpos += scale * stbtt_GetCodepointKernAdvance(
+               &fontinfo,
+               (int)codepoint,
+               (int)utf32text[ch + 1]);
+        if(-y0 > ymax)
+            ymax = -y0;
+    }
+    
+    float xmax = xpos;
+    
+    outSize.x = xmax * downscale;
+    outSize.y = ymax * downscale;
+    yoffset = 0;
+//    uint sizex = NextPowerOfTwo(xmax);
+//    uint sizey = NextPowerOfTwo(ymax);
+    uint sizex = 512;
+    uint sizey = 512;
+
+    outUV.x = (float)xmax / sizex;
+    outUV.y = (float)ymax / sizey;
+    
+    std::stringstream ss;
+    // We're encapsulating strings in single quotes, and replacing existing
+    // quotes with an escaped variant. This is OK-robust, but once iOS has
+    // proper c++11 regex support, this should be replaced.
+    ss << "label:'"  << Furiosity::StringReplace(text, "'", "\'")
+    << "' font:'" << Furiosity::StringReplace(fontfile, "'", "\'")
+    << "' size:'" << fontsize << "'";
+    
+    // Update the internal details:
+    resourcePath = ss.str();
+    resourceID = StringHash(resourcePath);
+    
+    // Set the texture internal properties:
+    dimension           = outSize;
+    uvTo                = outUV;
+    width               = sizex;
+    height              = sizey;
+    internalFormat      = GL_RGBA;
+    hasAlpha            = true;
+    size                = width * height * 4;
+    GLubyte*  imageData = (GLubyte*) calloc(size, 1);
+    
+    glGenTextures(1, &name);               // Gen
+    GL_GET_ERROR();
+    glBindTexture(GL_TEXTURE_2D, name);    // Bind
+    GL_GET_ERROR();
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);   // Minmization
+    GL_GET_ERROR();
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);   // Magnification
+    GL_GET_ERROR();
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    GL_GET_ERROR();
+    
+    
+    // Draw a solid label background:
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            imageData[i * width * 4 + j * 4 + 0] = (GLubyte)255;
+            imageData[i * width * 4 + j * 4 + 1] = (GLubyte)255;
+            imageData[i * width * 4 + j * 4 + 2] = (GLubyte)255;
+            imageData[i * width * 4 + j * 4 + 3] = (GLubyte)255;
+        }
+    }
+    
+    glTexImage2D(GL_TEXTURE_2D,                 // What (target)
+                 0,                             // Mip-map level
+                 internalFormat,                // Internal format
+                 width,                         // Width
+                 height,                        // Height
+                 0,                             // Border
+                 internalFormat,                // Format (how to use)
+                 GL_UNSIGNED_BYTE,              // Type   (how to intepret)
+                 imageData);                    // Data
+    
+    GL_GET_ERROR();
+    
+    // free(imageData);
+    // imageData = 0;
+    
+    // To really benefit from caching, the font should
+    // be retained through a ResourcePack.
+    gResourceManager.ReleaseResource(font);
+    
+    Resource::Reload();
+
+    
+    
+    
+    /*
     // float scale = gResourceManager.GetFontDownscale();
     
     // TODO: This a very bad way to increase resolution on labels
@@ -62,7 +237,8 @@ void Label::Reload(bool cached)
         fontfile = font;
     
     Font* f = gResourceManager.LoadFont(fontfile);
-    FT_Face face = f->GetFace();
+    
+    //     FT_Face face = f->GetFace();
     
     // Aqcuire the translated string for this label:
     std::string text = gResourceManager.GetString( originalText );
@@ -83,11 +259,12 @@ void Label::Reload(bool cached)
     vector<uint> utf32text;
     utf8::utf8to32(text.begin(), text.end(), back_inserter(utf32text));
 
-    FT_Error error;
+//    FT_Error error;
   
-    error = FT_Set_Pixel_Sizes(face,        // handle to face object
-                               0,           // pixel_width
-                               fontsize * (1.0f / scale));   // pixel_height
+//    error = FT_Set_Pixel_Sizes(face,        // handle to face object
+//                               0,           // pixel_width
+//                               fontsize * (1.0f / scale));   // pixel_height
+    
     ASSERT(!error);
     
     ///////////////////////////////////////////////////
@@ -204,19 +381,18 @@ void Label::Reload(bool cached)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     GL_GET_ERROR();
 
-    /*
+    
     // Draw a solid label background:
-    for (int i = 0; i < tex->height; i++)
-    {
-        for (int j = 0; j < tex->width; j++)
-        {
-            tex->imageData[i * tex->width * 4 + j * 4 + 0] = (GLubyte)255;
-            tex->imageData[i * tex->width * 4 + j * 4 + 1] = (GLubyte)0;
-            tex->imageData[i * tex->width * 4 + j * 4 + 2] = (GLubyte)0;
-            tex->imageData[i * tex->width * 4 + j * 4 + 3] = (GLubyte)255;
-        }
-    }
-    */
+    //for (int i = 0; i < tex->height; i++)
+//    {
+//        for (int j = 0; j < tex->width; j++)
+//        {
+//            tex->imageData[i * tex->width * 4 + j * 4 + 0] = (GLubyte)255;
+//            tex->imageData[i * tex->width * 4 + j * 4 + 1] = (GLubyte)0;
+//            tex->imageData[i * tex->width * 4 + j * 4 + 2] = (GLubyte)0;
+//            tex->imageData[i * tex->width * 4 + j * 4 + 3] = (GLubyte)255;
+//        }
+//    }
 
     size_t pen_x, pen_y;
     pen_x = 0;
@@ -306,6 +482,7 @@ void Label::Reload(bool cached)
     gResourceManager.ReleaseResource(f);
     
     Resource::Reload();
+     */
 }
 
 bool Label::IsValid() {

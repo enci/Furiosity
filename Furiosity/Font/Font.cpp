@@ -12,10 +12,11 @@
 
 using namespace Furiosity;
 
-FT_Library Font::library = 0;
+//FT_Library Font::library = 0;
+
 
 Font::Font(const std::string& filename)
-: Resource(RESOURCE_TYPE_FONT)
+:   Resource(RESOURCE_TYPE_FONT)
 {
     // We'll start basic by caching just the raw font blob,
     // at some point we could also cache the FT_Face instance.
@@ -27,9 +28,21 @@ Font::Font(const std::string& filename)
         assert(0);
     }
     
-    // Update for statistics:
+    // Update for statistics
     size = (int)fontdata.length();
     
+    // Init the font from the file
+    int res = stbtt_InitFont(&fontinfo,
+                             reinterpret_cast<const unsigned char*>(fontdata.c_str()),
+                             0);
+    
+    if(!res)
+    {
+        LOG("Font file could not be opened  or read, or simply that it is broken. "
+            "Font: '%s'", filename.c_str());
+    }
+    
+    /*    
     FT_Error error;
     
     // Singleton, create one library instance:
@@ -59,8 +72,10 @@ Font::Font(const std::string& filename)
             "not be opened  or read, or simply that it is broken. "
             "Font: '%s'", filename.c_str());
     }
+     */
 }
 
-Font::~Font() {
-    FT_Done_Face(face);
+Font::~Font()
+{
+    // FT_Done_Face(face);
 }

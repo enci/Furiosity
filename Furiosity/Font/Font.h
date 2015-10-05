@@ -11,6 +11,7 @@
 #include "ResourceManager.h"
 #include "Resource.h"
 
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 

@@ -16,7 +16,7 @@
 
 namespace Furiosity
 {
-    // Used by the GUI and some other elemnts
+    // /Used by the GUI and some other elemnts
     struct VertexPosition2DTexture
     {
         Vector2 Position;           // 8 Bytes
@@ -25,7 +25,7 @@ namespace Furiosity
     };
     
     
-    // This is the format OBJ uses that 
+    /// This is the format OBJ uses that
     struct VertexPositionNormalTexture
     {
         Vector3 Position;       // 16 bytes

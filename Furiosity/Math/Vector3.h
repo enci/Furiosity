@@ -209,11 +209,6 @@ namespace Furiosity
         void Normalize()
         {
             float l = Magnitude();
-			float inv = 1 / l;
-			x /= inv;
-			y /= inv;
-			z /= inv;
-
             if (l > 0)
             {
                 (*this) *= ((float)1)/l;

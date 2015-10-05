@@ -13,7 +13,7 @@
 
 #ifdef IOS
 
-//#define VERBOSE
+#define VERBOSE 0
 
 using namespace std;
 using namespace Furiosity;

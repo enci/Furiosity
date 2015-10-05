@@ -12,7 +12,7 @@
 namespace Furiosity
 {
     /// Most curves use cubic polynomials exclusively, and this is a simple
-    // class implemeting one.
+    /// class implemeting one.
     class CubicPolynomial
     {
     protected:
@@ -30,6 +30,7 @@ namespace Furiosity
         }
         
         /// Calculates the value using the horner rule
+        ///
         /// @return The value ot the polynomial at x
         inline float Value(float x) const
         {

@@ -104,7 +104,6 @@
 		3441E78D1A4CC0E300F2F211 /* quaternion.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 3441E74C1A4CB5A000F2F211 /* quaternion.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
 		34429F511A4636B100ECF1B6 /* CubeMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34429F4F1A4636B100ECF1B6 /* CubeMap.cpp */; };
 		34429F521A4636B100ECF1B6 /* CubeMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 34429F501A4636B100ECF1B6 /* CubeMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34437D821BC30BFD001E541E /* stb_truetype.h in Headers */ = {isa = PBXBuildFile; fileRef = 34437D811BC30BFD001E541E /* stb_truetype.h */; settings = {ASSET_TAGS = (); }; };
 		345C880118C4C735002A5B39 /* Colorable.h in Headers */ = {isa = PBXBuildFile; fileRef = 3460848118BE0173002624AB /* Colorable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3460847018BC99E2002624AB /* ParameterAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 3460846E18BC99E2002624AB /* ParameterAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3460847718BCA340002624AB /* AnimationContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3460847518BCA340002624AB /* AnimationContainer.cpp */; };
@@ -1615,7 +1614,6 @@
 				A6E4BC74170F0FA2004B3989 /* ftmm.h in Headers */,
 				3441E7641A4CB5A000F2F211 /* defs.h in Headers */,
 				A6E4BC75170F0FA2004B3989 /* ftmodapi.h in Headers */,
-				34437D821BC30BFD001E541E /* stb_truetype.h in Headers */,
 				A6E4BC76170F0FA2004B3989 /* ftmoderr.h in Headers */,
 				5A2A90A917E2FB4A007E4BB9 /* Entity.h in Headers */,
 				3441E7781A4CB5A000F2F211 /* ProgressHandler.hpp in Headers */,

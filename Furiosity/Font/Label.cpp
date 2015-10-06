@@ -47,11 +47,13 @@ Label::~Label()
     // The superclass releases the glTexture.
 }
 
-unsigned char buffer[512][512];
+// Static buffer for
+const uint bufferWidth = 512;
+const uint bufferHeight = 512;
 
 void Label::Reload(bool cached)
 {
-    float downscale = gResourceManager.GetFontDownscale() * 2.0f;
+    float downscale = gResourceManager.GetFontDownscale(); // * 2.0f;
     
     // A language may have its own font, these fonts are stored as
     // "translated" strings, too.
@@ -89,6 +91,8 @@ void Label::Reload(bool cached)
     int baseline = (int) (ascent*scale);                      // calculate the baseline in pixels
     
     
+    unsigned char* buffer = (unsigned char*)calloc(bufferWidth * bufferHeight, sizeof(char));
+    
     float xpos = 2;
     float ymax = -FLT_MAX;
     for(int ch = 0; ch < utf32text.size(); ++ch)
@@ -113,9 +117,11 @@ void Label::Reload(bool cached)
                                             &x1,                // x max (to)
                                             &y1);               // y max (to)
         
+        int idx = (baseline + y0) * bufferWidth + (int)xpos + x0;
+        
         // This output can be saved into a bitmap and
-        stbtt_MakeCodepointBitmapSubpixel(&fontinfo,                                    // font
-                                          &buffer[baseline + y0][(int) xpos + x0],  // pos in final image
+        stbtt_MakeCodepointBitmapSubpixel(&fontinfo,                                // font
+                                          &buffer[idx],  // pos in final image
                                           x1-x0,                                    // output_width
                                           y1-y0,                                    // output_height
                                           512,                                      // stride
@@ -123,7 +129,7 @@ void Label::Reload(bool cached)
                                           scale,                                    // scale y
                                           x_shift,                                  // subpixel shift x
                                           0,                                        // subpixel shift y
-                                          (int)codepoint);                                // codepoint
+                                          (int)codepoint);                          // codepoint
         
         xpos += (advance * scale);
         if (ch < utf32text.size() - 1)
@@ -131,22 +137,26 @@ void Label::Reload(bool cached)
                &fontinfo,
                (int)codepoint,
                (int)utf32text[ch + 1]);
-        if(-y0 > ymax)
-            ymax = -y0;
+        
+        if((y1-y0) > ymax)
+            ymax = (y1-y0);
     }
+    
+//    ymax *= 2;
     
     float xmax = xpos;
     
     outSize.x = xmax * downscale;
     outSize.y = ymax * downscale;
     yoffset = 0;
-//    uint sizex = NextPowerOfTwo(xmax);
-//    uint sizey = NextPowerOfTwo(ymax);
-    uint sizex = 512;
-    uint sizey = 512;
+    uint sizex = NextPowerOfTwo(xmax);
+    uint sizey = NextPowerOfTwo(ymax);
+    
+//     uint sizex = 512;
+//     uint sizey = 512;
 
-    outUV.x = (float)xmax / sizex;
-    outUV.y = (float)ymax / sizey;
+    outUV.x = ((float)xmax) / sizex;
+    outUV.y = 1.3f * ((float)ymax) / sizey;
     
     std::stringstream ss;
     // We're encapsulating strings in single quotes, and replacing existing
@@ -165,6 +175,7 @@ void Label::Reload(bool cached)
     uvTo                = outUV;
     width               = sizex;
     height              = sizey;
+    genMipMap           = false;
     internalFormat      = GL_RGBA;
     hasAlpha            = true;
     size                = width * height * 4;
@@ -186,15 +197,20 @@ void Label::Reload(bool cached)
     GL_GET_ERROR();
     
     
+    
     // Draw a solid label background:
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            imageData[i * width * 4 + j * 4 + 0] = (GLubyte)255;
-            imageData[i * width * 4 + j * 4 + 1] = (GLubyte)255;
-            imageData[i * width * 4 + j * 4 + 2] = (GLubyte)255;
-            imageData[i * width * 4 + j * 4 + 3] = (GLubyte)255;
+            unsigned char c = buffer[i * bufferWidth + j];
+         
+            // Base index in buffer
+            int baseIdx = (i * width + j) * 4;
+            imageData[baseIdx + 0] = (GLubyte)255;
+            imageData[baseIdx + 1] = (GLubyte)255;
+            imageData[baseIdx + 2] = (GLubyte)255;
+            imageData[baseIdx + 3] = (GLubyte)c;
         }
     }
     
@@ -218,9 +234,6 @@ void Label::Reload(bool cached)
     gResourceManager.ReleaseResource(font);
     
     Resource::Reload();
-
-    
-    
     
     /*
     // float scale = gResourceManager.GetFontDownscale();

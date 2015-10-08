@@ -8,11 +8,12 @@
 
 #pragma once
 
+#ifndef FONT_H
+#define FONT_H
+
 #include "ResourceManager.h"
 #include "Resource.h"
 
-
-#define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
 #include "stb_truetype.h"
 
 // #include <ft2build.h>
@@ -66,3 +67,5 @@ namespace Furiosity
         */
     };
 }
+
+#endif

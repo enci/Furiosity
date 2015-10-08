@@ -117,7 +117,7 @@ namespace Furiosity
         
         virtual ~Vehicle3D() {}
         
-        virtual void LoadFromXml(const XMLElement& settings);
+        virtual void LoadFromXml(const XMLElement& settings) override;
         
         virtual void Update(float dt) override;
         

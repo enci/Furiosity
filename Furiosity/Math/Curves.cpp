@@ -162,6 +162,8 @@ Vector2 CardinalCurve::Derivative(float t) const
     
     return new Vector2(x, y);
      */
+    
+    return Vector2();
 }
 
 float CardinalCurve::AproximateLength() const
@@ -177,4 +179,6 @@ float CardinalCurve::AproximateLength() const
     }
     return l;            
     */
+    
+    return 0.0f;
 }

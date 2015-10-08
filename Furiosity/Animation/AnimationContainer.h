@@ -41,7 +41,7 @@ namespace Furiosity
         
         virtual ~AnimationContainer() {}
         
-        virtual void Update(float dt) = 0;
+        virtual void Update(float dt) override = 0;
         
         virtual void AddAnimation(AnimationShrPtr anim) { animations.push_back(anim); }
         
@@ -65,18 +65,18 @@ namespace Furiosity
         
         AnimationSequence(initializer_list<Animation*> anims);
         
-        virtual void Update(float dt);
+        virtual void Update(float dt) override;
         
-        virtual void AddAnimation(AnimationShrPtr anim);
+        virtual void AddAnimation(AnimationShrPtr anim) override;
         
         /// Reset the animation sequence by playing from the beginning
         virtual void Reset() override;
         
         /// Returns when the last animation in the sequeces has finished playing
-        virtual bool IsDone() const { return animQueue.empty(); }
+        virtual bool IsDone() const override { return animQueue.empty(); }
         
         /// Clear the animation sequence
-        virtual void Clear() { AnimationContainer::Clear(); animQueue = {}; }
+        virtual void Clear() override { AnimationContainer::Clear(); animQueue = {}; }
     };
     
     

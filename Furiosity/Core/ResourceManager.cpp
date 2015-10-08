@@ -958,7 +958,7 @@ vector<string> ResourceManager::GetFilesOnLocation(const string& location,
     //
     while((dp = readdir(dirp)) != NULL)
     {
-        if (dp->d_name)
+        //if (dp->d_name)
         {
             string file(dp->d_name);
             

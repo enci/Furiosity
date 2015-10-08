@@ -52,7 +52,7 @@ namespace Furiosity
         virtual void Render();
         
         /// Updates the entities and handles collisions
-        void virtual Update(float dt);
+        void virtual Update(float dt) override;
         
         /// This function must be overriden be each game
         virtual void HandleCollision(Contact3D& contact) = 0;

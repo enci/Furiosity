@@ -111,7 +111,7 @@ namespace Furiosity
         virtual ~GUIElement() {}
         
         // Virtual update call
-        virtual void Update(float dt);
+        virtual void Update(float dt) override;
         
         // Handle a touch
         virtual void HandleTouch(Touch* touch) {}

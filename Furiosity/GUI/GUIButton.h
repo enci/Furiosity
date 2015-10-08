@@ -83,7 +83,7 @@ namespace Furiosity
         virtual void HandleTouch(Touch* touch) override;
         
         /// Needs to drop few things when set do dissabled
-        virtual void Hide();
+        virtual void Hide() override;
         
         /// The texture for the button can be changed usig this method
         virtual void SetTexture(const string& texutrename,

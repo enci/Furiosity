@@ -12,6 +12,8 @@
 
 using namespace Furiosity;
 
+#define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
+
 //FT_Library Font::library = 0;
 
 

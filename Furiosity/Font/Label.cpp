@@ -11,6 +11,9 @@
 // #include <ft2build.h>
 // #include FT_FREETYPE_H
 
+#define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
+#include "stb_truetype.h"
+
 using namespace Furiosity;
 using namespace std;
 
@@ -53,7 +56,7 @@ const uint bufferHeight = 512;
 
 void Label::Reload(bool cached)
 {
-    float downscale = gResourceManager.GetFontDownscale(); // * 2.0f;
+    float downscale = gResourceManager.GetFontDownscale() * 0.5f;
     
     // A language may have its own font, these fonts are stored as
     // "translated" strings, too.
@@ -75,7 +78,7 @@ void Label::Reload(bool cached)
     
     
     Vector2 outSize, outUV;
-    bool multiline = false;
+    //     bool multiline = false;
     
     // Check for invalid utf-8 (for a simple yes/no check, there is also utf8::is_valid function)
     auto end_it = utf8::find_invalid(text.begin(), text.end());
@@ -86,7 +89,7 @@ void Label::Reload(bool cached)
     utf8::utf8to32(text.begin(), text.end(), back_inserter(utf32text));
 
     int ascent;
-    float scale = stbtt_ScaleForPixelHeight(&fontinfo, fontsize);   // get the scale for certain
+    float scale = stbtt_ScaleForPixelHeight(&fontinfo, fontsize / downscale);   // get the scale for certain
     stbtt_GetFontVMetrics(&fontinfo, &ascent, 0, 0);                // get the the ascent
     int baseline = (int) (ascent*scale);                      // calculate the baseline in pixels
     
@@ -142,7 +145,7 @@ void Label::Reload(bool cached)
             ymax = (y1-y0);
     }
     
-//    ymax *= 2;
+    ymax *= 1.5;
     
     float xmax = xpos;
     
@@ -156,7 +159,7 @@ void Label::Reload(bool cached)
 //     uint sizey = 512;
 
     outUV.x = ((float)xmax) / sizex;
-    outUV.y = 1.3f * ((float)ymax) / sizey;
+    outUV.y = ((float)ymax) / sizey;
     
     std::stringstream ss;
     // We're encapsulating strings in single quotes, and replacing existing

@@ -413,7 +413,7 @@ void Shader::LoadParamters()
         GLsizei actualLength = 0;
         glGetActiveAttrib(program,
                           attrib,
-                          attribNameData.size(),
+                           static_cast<int>(attribNameData.size()),
                           &actualLength,
                           &arraySize,
                           &type,

@@ -29,9 +29,9 @@ namespace Furiosity
     /// Base Game Entity
     /// A base class for all things that should exist in a game world (scene, level)
     ///
-	class Entity2D :  public Entity,
-                            public Transformable,
-                            public Countable<Entity2D>
+	class Entity2D :    public Entity,
+                        public Transformable,
+                        public Countable<Entity2D>
 	{
         
 	protected:

@@ -282,9 +282,8 @@ void CollisionManager::AccumulateContacts(const std::list<Entity2D*>& entities)
         }
     }
     
-    next = contacts.size();
-        
-    
+    next =  static_cast<int>(contacts.size());
+            
     
     /*
     // Go over all entities

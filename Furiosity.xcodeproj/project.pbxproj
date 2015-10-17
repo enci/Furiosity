@@ -135,8 +135,8 @@
 		34AFC19F1801E2770070EAE5 /* BaseFXParticles.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 34AFC19B1801C8D70070EAE5 /* BaseFXParticles.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
 		34B353FE1855E2460028E329 /* Transformable3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34B353FD1855E2460028E329 /* Transformable3D.cpp */; };
 		34CEF8671B7DE2EF00056EF2 /* Curves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF8651B7DE2EF00056EF2 /* Curves.cpp */; };
-		34CEF8681B7DE2EF00056EF2 /* Curves.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEF8661B7DE2EF00056EF2 /* Curves.h */; };
-		34CEF86A1B7DECB400056EF2 /* CubicPolynomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEF8691B7DECB400056EF2 /* CubicPolynomial.h */; };
+		34CEF8681B7DE2EF00056EF2 /* Curves.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEF8661B7DE2EF00056EF2 /* Curves.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34CEF86A1B7DECB400056EF2 /* CubicPolynomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEF8691B7DECB400056EF2 /* CubicPolynomial.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D492A518B3AA100055B385 /* libfreetype2-5-0-1-ios-fat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 632B2DAD1822BE3500AD0CD3 /* libfreetype2-5-0-1-ios-fat.a */; };
 		34DE2D4B19C1978800F954D7 /* GUILabeledButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34DE2D4919C1978800F954D7 /* GUILabeledButton.cpp */; };
 		34DE2D4C19C1978800F954D7 /* GUILabeledButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DE2D4A19C1978800F954D7 /* GUILabeledButton.h */; settings = {ATTRIBUTES = (Public, ); }; };

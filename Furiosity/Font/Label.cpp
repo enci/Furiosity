@@ -184,6 +184,12 @@ void Label::Reload(bool cached)
     size                = width * height * 4;
     GLubyte*  imageData = (GLubyte*) calloc(size, 1);
     
+    if(name != 0)
+    {
+        glDeleteTextures(1, &name);
+        name = 0;
+    }
+    
     glGenTextures(1, &name);               // Gen
     GL_GET_ERROR();
     glBindTexture(GL_TEXTURE_2D, name);    // Bind
@@ -229,8 +235,12 @@ void Label::Reload(bool cached)
     
     GL_GET_ERROR();
     
-    // free(imageData);
-    // imageData = 0;
+    
+    free(buffer);
+    buffer = 0;
+    
+    free(imageData);
+    imageData = 0;
     
     // To really benefit from caching, the font should
     // be retained through a ResourcePack.

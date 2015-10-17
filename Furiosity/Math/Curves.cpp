@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Curves.h"
+#include "Frmath.h"
 
 
 using namespace Furiosity;
@@ -55,7 +56,7 @@ void CardinalCurve::RebuildOpen()
     Py.clear();
     
     int start = 0; //CV.Count - 2;// Px.Count;
-    int end = CV.size() - 1;
+    auto end = CV.size() - 1;
     
     // Got through all the CVs
     for (int i = start; i < end; i++)
@@ -87,36 +88,35 @@ void CardinalCurve::RebuildClosed()
     // Minimum for creating a segment
     if (CV.size() < 2)
         return;
-    /*
-    Px.Clear();
-    Py.Clear();
+    
+    Px.clear();
+    Py.clear();
     
     int start = 0;
-    int end = CV.Count;
+    int end = CV.size();
     
     // Got through all the CVs
     for (int i = start; i < end; i++)
     {
         int curr = i;
-        int prev = MathFloat.Nmod(i - 1, end);
-        int next = MathFloat.Nmod(i + 1, end);
-        int last = MathFloat.Nmod(i + 2, end);
+        int prev = Modulo(i - 1, end);
+        int next = Modulo(i + 1, end);
+        int last = Modulo(i + 2, end);
         //
         Vector2 p0 = CV[prev];
         Vector2 p1 = CV[curr];
         Vector2 p2 = CV[next];
         Vector2 p3 = CV[last];
         //
-        Px.Add(CalculatePolynomial(p0.x, p1.x, p2.x, p3.x));
-        Py.Add(CalculatePolynomial(p0.y, p1.y, p2.y, p3.y));
+        Px.push_back(CalculatePolynomial(p0.x, p1.x, p2.x, p3.x));
+        Py.push_back(CalculatePolynomial(p0.y, p1.y, p2.y, p3.y));
     }
-     */
 }
 
 // Calculates the samples and returns them for drawing
 Vector2 CardinalCurve::Value(float t) const
 {
-    int count = Px.size();
+    auto count = Px.size();
     
     if(count == 0)
         return Vector2();

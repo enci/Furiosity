@@ -200,12 +200,10 @@ namespace Furiosity
     void CartesianToSpherical(float& r, float& theta, float& fi,
                               float x, float y, float z);
     
-    /*
-    int Nmod(int x, int m)
+    inline int Modulo(int x, int m)
     {
         return (x % m + m) % m;
     }
-     */
     
     
     /// Converts from spherical coordinates to cartesian

@@ -57,4 +57,42 @@ namespace Furiosity
         
         float AproximateLength() const;
     };
+    
+    class BSpline
+    {
+    public:
+        bool closed;
+        
+        // Control Vertices
+        std::vector<Vector2> CV;
+        
+        std::vector<int> knots;
+        
+        // Polynomials for interpolation of the x coordinate
+        std::vector<CubicPolynomial> Px;
+        
+        // Polynomials for interpolation of the y coordinate
+        std::vector<CubicPolynomial> Py;
+        
+        int count;
+        
+        // Contruct an emtpy curve
+        BSpline();
+        
+        // Creates a new polynimal for a segment from four control vertices
+        // CubicPolynomial CalculatePolynomial(float p0, float p1, float p2, float p3) const;
+        
+        void Rebuild();
+        
+        void CalculatePolys();
+        
+        // Rebuilds the curve
+        // void RebuildOpen();
+        
+        // void RebuildClosed();
+        
+        // Calculates the samples and returns them for drawing
+        Vector2 Value(float t) const;
+        
+    };
 }

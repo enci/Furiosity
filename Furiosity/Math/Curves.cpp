@@ -182,3 +182,110 @@ float CardinalCurve::AproximateLength() const
     
     return 0.0f;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// BSpline
+////////////////////////////////////////////////////////////////////////////////
+BSpline::BSpline()
+    : closed(false)
+    , count(0)
+{
+}
+
+void BSpline::Rebuild()
+{
+    count = CV.size();
+    Px.clear();
+    Py.clear();
+    
+    if(closed)
+    {
+        // Create closed curve
+        knots.resize(count + 3);
+        // Px.resize(count);
+        // Py.resize(count);
+        //Pz.resize(count);
+        for(int i = 0; i < count; i++)
+            knots[i] = i;
+        knots[count] = 0;
+        knots[count + 1] = 1;
+        knots[count + 2] = 2;
+    }
+    else
+    {
+        // Create a clamped curve
+        knots.resize(count + 6);
+        // Px.resize(count + 3);
+        // Py.resize(count + 3);
+        // Pz.resize(count + 3);;
+        knots[0] = 0;
+        knots[1] = 0;
+        knots[2] = 0;
+        for(int i = 3; i < count + 3; i++)
+            knots[i] = i - 3;
+        knots[count + 3] = count - 1;
+        knots[count + 4] = count - 1;
+        knots[count + 5] = count - 1;
+    }
+    
+    CalculatePolys();
+}
+
+void BSpline::CalculatePolys()
+{
+    for(int i = 0; i < knots.size() - 3; i++)
+    {
+        Px.push_back(CubicPolynomial(
+            (-CV[knots[i]].x + 3.0f * CV[knots[i + 1]].x - 3.0f * CV[knots[i + 2]].x + CV[knots[i + 3]].x) / 6.0f,
+            (3.0f * CV[knots[i]].x - 6.0f * CV[knots[i + 1]].x + 3.0f * CV[knots[i + 2]].x) / 6.0f,
+            (-3.0f * CV[knots[i]].x + 3.0f * CV[knots[i + 2]].x) / 6.0f,
+            (CV[knots[i]].x + 4.0f * CV[knots[i + 1]].x + CV[knots[i + 2]].x) / 6.0f));
+        
+        Py.push_back(CubicPolynomial(
+            (-CV[knots[i]].y + 3.0f * CV[knots[i + 1]].y - 3.0f * CV[knots[i + 2]].y + CV[knots[i + 3]].y) / 6.0f,
+            (3.0f * CV[knots[i]].y - 6.0f * CV[knots[i + 1]].y + 3.0f * CV[knots[i + 2]].y) / 6.0f,
+            (-3.0f * CV[knots[i]].y + 3.0f * CV[knots[i + 2]].y) / 6.0f,
+            (CV[knots[i]].y + 4.0f * CV[knots[i + 1]].y + CV[knots[i + 2]].y) / 6.0f));
+        
+        /*
+        Pz[i] = new CubicPolynomial(
+                                    (-CV[knots[i]].Z + 3.0f * CV[knots[i + 1]].Z - 3.0f * CV[knots[i + 2]].Z + CV[knots[i + 3]].Z) / 6.0f,
+                                    (3.0f * CV[knots[i]].Z - 6.0f * CV[knots[i + 1]].Z + 3.0f * CV[knots[i + 2]].Z) / 6.0f,
+                                    (-3.0f * CV[knots[i]].Z + 3.0f * CV[knots[i + 2]].Z) / 6.0f,
+                                    (CV[knots[i]].Z + 4.0f * CV[knots[i + 1]].Z + CV[knots[i + 2]].Z) / 6.0f);
+         */
+    }
+}
+
+Vector2 BSpline::Value(float t) const
+{
+    auto count = Px.size();
+    
+    if(count == 0)
+        return Vector2();
+    if(closed)
+    {
+        if (t < 0.0f) t = 1.0f + t;
+        if (t >= 1.0f) t = t - 1.0f;
+    }
+    else
+    {
+        if (t <= 0.0f) t = 0.0f;
+        if (t >= 1.0f) t = 0.99999f;
+    }
+    
+    int poly = (int)floorf(t * count);
+    t = t - ((float)poly / count);
+    t *= count;
+    
+    float x = Px[poly].Value(t);
+    float y = Py[poly].Value(t);
+    
+    return Vector2(x, y);
+}
+
+
+
+
+// end
